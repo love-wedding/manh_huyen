@@ -1,6 +1,6 @@
 // Deploy this file as a Google Apps Script Web app.
-// Replace ADMIN_TOKEN with a long, private value before deployment.
-const ADMIN_TOKEN = 'CHANGE-THIS-TO-A-LONG-RANDOM-SECRET';
+// Keep this in sync with ADMIN_TOKEN in index.html, then redeploy the web app.
+const ADMIN_TOKEN = 'minhle2312';
 const SHEET_NAME = 'Khach moi';
 const HEADERS = ['id', 'name', 'views', 'lastViewed', 'createdAt'];
 
