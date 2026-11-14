@@ -1,27 +1,202 @@
 <!doctype html>
 <html lang="vi">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Quản lý khách mời</title>
   <style>
-    *{box-sizing:border-box}body{margin:0;background:#f7f5f1;color:#302b27;font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}.wrap{max-width:960px;margin:42px auto;padding:0 18px}.card{background:#fff;border:1px solid #e8e2da;border-radius:16px;padding:24px;margin:16px 0;box-shadow:0 8px 28px #302b2709}h1{font-size:27px;margin:0 0 5px}h2{font-size:19px;margin:0 0 16px}.muted{color:#777}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}input{font:inherit;padding:11px 13px;border:1px solid #d9d2c9;border-radius:9px;min-width:220px;flex:1}button,.button{border:0;border-radius:9px;padding:11px 16px;background:#614d42;color:white;font:inherit;cursor:pointer}.button{display:inline-block;text-decoration:none;padding:7px 11px;font-size:13px}.secondary{background:#eee8e2;color:#302b27}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px 9px;border-bottom:1px solid #eee;vertical-align:top}th{font-size:13px;color:#766e66}td a{overflow-wrap:anywhere}.status{display:inline-block;border-radius:20px;padding:3px 9px;background:#f5eee8}.status.seen{background:#e8f4e9;color:#286638}.scroll{overflow:auto}.note{font-size:13px;margin-top:12px}.error{color:#a12626}@media(max-width:600px){.wrap{margin:20px auto}.card{padding:17px}th:nth-child(4),td:nth-child(4){display:none}}
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: #f7f5f1;
+      color: #302b27;
+      font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif
+    }
+
+    .wrap {
+      max-width: 960px;
+      margin: 42px auto;
+      padding: 0 18px
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e8e2da;
+      border-radius: 16px;
+      padding: 24px;
+      margin: 16px 0;
+      box-shadow: 0 8px 28px #302b2709
+    }
+
+    h1 {
+      font-size: 27px;
+      margin: 0 0 5px
+    }
+
+    h2 {
+      font-size: 19px;
+      margin: 0 0 16px
+    }
+
+    .muted {
+      color: #777
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    input {
+      font: inherit;
+      padding: 11px 13px;
+      border: 1px solid #d9d2c9;
+      border-radius: 9px;
+      min-width: 220px;
+      flex: 1
+    }
+
+    button,
+    .button {
+      border: 0;
+      border-radius: 9px;
+      padding: 11px 16px;
+      background: #614d42;
+      color: white;
+      font: inherit;
+      cursor: pointer
+    }
+
+    .button {
+      display: inline-block;
+      text-decoration: none;
+      padding: 7px 11px;
+      font-size: 13px
+    }
+
+    .secondary {
+      background: #eee8e2;
+      color: #302b27
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 12px 9px;
+      border-bottom: 1px solid #eee;
+      vertical-align: top
+    }
+
+    th {
+      font-size: 13px;
+      color: #766e66
+    }
+
+    td a {
+      overflow-wrap: anywhere
+    }
+
+    .status {
+      display: inline-block;
+      border-radius: 20px;
+      padding: 3px 9px;
+      background: #f5eee8
+    }
+
+    .status.seen {
+      background: #e8f4e9;
+      color: #286638
+    }
+
+    .scroll {
+      overflow: auto
+    }
+
+    .note {
+      font-size: 13px;
+      margin-top: 12px
+    }
+
+    .error {
+      color: #a12626
+    }
+
+    @media(max-width:600px) {
+      .wrap {
+        margin: 20px auto
+      }
+
+      .card {
+        padding: 17px
+      }
+
+      th:nth-child(4),
+      td:nth-child(4) {
+        display: none
+      }
+    }
   </style>
 </head>
-<body><main class="wrap">
-  <h1>Quản lý khách mời</h1><div class="muted">Thêm khách, tạo link thiệp riêng và theo dõi lượt mở.</div>
-  <section class="card"><h2>Thêm khách mời</h2><form id="addForm" class="row"><input id="guestName" placeholder="Tên khách mời" required maxlength="120"><button>Thêm khách và tạo link</button></form><div id="notice" class="note muted">Đang tải danh sách…</div></section>
-  <section class="card"><div class="row"><h2>Danh sách khách</h2><button id="reload" class="secondary">Tải lại</button></div><div class="scroll"><table><thead><tr><th>Tên khách</th><th>Trạng thái</th><th>Lượt xem</th><th>Lần xem gần nhất</th><th>Link riêng</th></tr></thead><tbody id="guests"><tr><td colspan="5" class="muted">Đang tải danh sách…</td></tr></tbody></table></div></section>
-</main><script>
-(()=>{
-  // Dán URL Web app kết thúc bằng /exec và cùng mã bí mật với Code.gs vào đây.
-  const APPS_SCRIPT_URL='PASTE_GOOGLE_APPS_SCRIPT_EXEC_URL_HERE';
-  const ADMIN_TOKEN='PASTE_THE_SAME_PRIVATE_TOKEN_HERE';
-  const $=s=>document.querySelector(s),notice=$('#notice'),body=$('#guests');
-  function config(){if(!APPS_SCRIPT_URL.startsWith('https://script.google.com/')||APPS_SCRIPT_URL.includes('PASTE_'))throw Error('Hãy dán URL Web app /exec vào APPS_SCRIPT_URL trong mã trang.');if(ADMIN_TOKEN.includes('PASTE_'))throw Error('Hãy điền ADMIN_TOKEN trong mã trang trùng với Code.gs.');return{url:APPS_SCRIPT_URL,key:ADMIN_TOKEN}}
-  function jsonp(url){return new Promise((resolve,reject)=>{const cb='guestCb'+Date.now()+Math.random().toString(36).slice(2),s=document.createElement('script'),timer=setTimeout(()=>{delete window[cb];s.remove();reject(Error('Không kết nối được Apps Script.'))},15000);window[cb]=data=>{clearTimeout(timer);delete window[cb];s.remove();resolve(data)};s.onerror=()=>{clearTimeout(timer);delete window[cb];s.remove();reject(Error('Không tải được dữ liệu từ Google Sheets.'))};s.src=url+'&callback='+cb;document.head.append(s)})}
-  async function load(){try{const c=config();notice.textContent='Đang tải danh sách…';notice.className='note muted';const d=await jsonp(c.url+'?action=list&token='+encodeURIComponent(c.key));if(!d.ok)throw Error(d.error||'Không thể đọc dữ liệu.');const base=new URL('../cd/',location.href);body.innerHTML='';if(!d.guests.length)body.innerHTML='<tr><td colspan="5" class="muted">Chưa có khách mời.</td></tr>';d.guests.forEach(g=>{const link=new URL(base);link.searchParams.set('guest',g.id);const tr=document.createElement('tr'),name=document.createElement('td');name.textContent=g.name;tr.append(name);const st=document.createElement('td');st.innerHTML=g.views>0?'<span class="status seen">Đã xem</span>':'<span class="status">Chưa xem</span>';tr.append(st);const count=document.createElement('td');count.textContent=g.views||0;tr.append(count);const last=document.createElement('td');last.textContent=g.lastViewed||'—';tr.append(last);const cell=document.createElement('td'),a=document.createElement('a');a.href=link.href;a.textContent='Mở link';a.target='_blank';a.rel='noopener';cell.append(a,document.createTextNode(' · '));const copy=document.createElement('button');copy.className='button secondary';copy.textContent='Sao chép';copy.onclick=()=>navigator.clipboard.writeText(link.href).then(()=>notice.textContent='Đã sao chép link cho '+g.name);cell.append(copy);tr.append(cell);body.append(tr)});notice.textContent='Đã tải '+d.guests.length+' khách mời.'}catch(e){notice.textContent=e.message;notice.className='note error'}}
-  $('#reload').onclick=load;$('#addForm').onsubmit=async e=>{e.preventDefault();try{const c=config(),name=$('#guestName').value.trim(),id=crypto.randomUUID();notice.textContent='Đang lưu khách mời…';await fetch(c.url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'add',token:c.key,id,name})});$('#guestName').value='';notice.textContent='Đã gửi yêu cầu lưu. Đang tải lại danh sách…';setTimeout(load,1200)}catch(err){notice.textContent=err.message;notice.className='note error'}};
-  const q=new URLSearchParams(location.search);if(q.has('refresh'))load();else load();
-})();
-</script></body></html>
+
+<body>
+  <main class="wrap">
+    <h1>Quản lý khách mời</h1>
+    <div class="muted">Thêm khách, tạo link thiệp riêng và theo dõi lượt mở.</div>
+    <section class="card">
+      <h2>Thêm khách mời</h2>
+      <form id="addForm" class="row"><input id="guestName" placeholder="Tên khách mời" required
+          maxlength="120"><button>Thêm khách và tạo link</button></form>
+      <div id="notice" class="note muted">Đang tải danh sách…</div>
+    </section>
+    <section class="card">
+      <div class="row">
+        <h2>Danh sách khách</h2><button id="reload" class="secondary">Tải lại</button>
+      </div>
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Tên khách</th>
+              <th>Trạng thái</th>
+              <th>Lượt xem</th>
+              <th>Lần xem gần nhất</th>
+              <th>Link riêng</th>
+            </tr>
+          </thead>
+          <tbody id="guests">
+            <tr>
+              <td colspan="5" class="muted">Đang tải danh sách…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script>
+    (() => {
+      // Dán URL Web app kết thúc bằng /exec và cùng mã bí mật với Code.gs vào đây.
+      const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbytgseeMKXE8feaOH5q1vM-3-hFnasncvuu4L8zoOxrRyLWkbC33XABRmGIn936AjoCLA/exec';
+      const ADMIN_TOKEN = 'minhle2312';
+      const $ = s => document.querySelector(s), notice = $('#notice'), body = $('#guests');
+      function config() { if (!APPS_SCRIPT_URL.startsWith('https://script.google.com/') || APPS_SCRIPT_URL.includes('PASTE_')) throw Error('Hãy dán URL Web app /exec vào APPS_SCRIPT_URL trong mã trang.'); if (ADMIN_TOKEN.includes('PASTE_')) throw Error('Hãy điền ADMIN_TOKEN trong mã trang trùng với Code.gs.'); return { url: APPS_SCRIPT_URL, key: ADMIN_TOKEN } }
+      function jsonp(url) { return new Promise((resolve, reject) => { const cb = 'guestCb' + Date.now() + Math.random().toString(36).slice(2), s = document.createElement('script'), timer = setTimeout(() => { delete window[cb]; s.remove(); reject(Error('Không kết nối được Apps Script.')) }, 15000); window[cb] = data => { clearTimeout(timer); delete window[cb]; s.remove(); resolve(data) }; s.onerror = () => { clearTimeout(timer); delete window[cb]; s.remove(); reject(Error('Không tải được dữ liệu từ Google Sheets.')) }; s.src = url + '&callback=' + cb; document.head.append(s) }) }
+      async function load() { try { const c = config(); notice.textContent = 'Đang tải danh sách…'; notice.className = 'note muted'; const d = await jsonp(c.url + '?action=list&token=' + encodeURIComponent(c.key)); if (!d.ok) throw Error(d.error || 'Không thể đọc dữ liệu.'); const base = new URL('../cd/', location.href); body.innerHTML = ''; if (!d.guests.length) body.innerHTML = '<tr><td colspan="5" class="muted">Chưa có khách mời.</td></tr>'; d.guests.forEach(g => { const link = new URL(base); link.searchParams.set('guest', g.id); const tr = document.createElement('tr'), name = document.createElement('td'); name.textContent = g.name; tr.append(name); const st = document.createElement('td'); st.innerHTML = g.views > 0 ? '<span class="status seen">Đã xem</span>' : '<span class="status">Chưa xem</span>'; tr.append(st); const count = document.createElement('td'); count.textContent = g.views || 0; tr.append(count); const last = document.createElement('td'); last.textContent = g.lastViewed || '—'; tr.append(last); const cell = document.createElement('td'), a = document.createElement('a'); a.href = link.href; a.textContent = 'Mở link'; a.target = '_blank'; a.rel = 'noopener'; cell.append(a, document.createTextNode(' · ')); const copy = document.createElement('button'); copy.className = 'button secondary'; copy.textContent = 'Sao chép'; copy.onclick = () => navigator.clipboard.writeText(link.href).then(() => notice.textContent = 'Đã sao chép link cho ' + g.name); cell.append(copy); tr.append(cell); body.append(tr) }); notice.textContent = 'Đã tải ' + d.guests.length + ' khách mời.' } catch (e) { notice.textContent = e.message; notice.className = 'note error' } }
+      $('#reload').onclick = load; $('#addForm').onsubmit = async e => { e.preventDefault(); try { const c = config(), name = $('#guestName').value.trim(), id = crypto.randomUUID(); notice.textContent = 'Đang lưu khách mời…'; await fetch(c.url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ action: 'add', token: c.key, id, name }) }); $('#guestName').value = ''; notice.textContent = 'Đã gửi yêu cầu lưu. Đang tải lại danh sách…'; setTimeout(load, 1200) } catch (err) { notice.textContent = err.message; notice.className = 'note error' } };
+      const q = new URLSearchParams(location.search); if (q.has('refresh')) load(); else load();
+    })();
+  </script>
+</body>
+
+</html>
