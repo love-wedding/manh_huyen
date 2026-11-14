@@ -10275,7 +10275,7 @@ https://maps.app.goo.gl/6cLvxjsnC4fLQZL29
     <script>
         (() => {
             const guestId = new URLSearchParams(window.location.search).get('guest');
-            const endpoint = 'PASTE_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
+            const endpoint = 'https://script.google.com/macros/s/AKfycbytgseeMKXE8feaOH5q1vM-3-hFnasncvuu4L8zoOxrRyLWkbC33XABRmGIn936AjoCLA/exec';
             if (guestId && endpoint.startsWith('https://script.google.com/')) {
                 const beacon = new Image();
                 beacon.src = endpoint + '?action=view&id=' + encodeURIComponent(guestId) + '&t=' + Date.now();
